@@ -1,0 +1,40 @@
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\User: 'auto'
+    # https://symfony.com/doc/current/security/authenticator_manager.html
+    # enable_authenticator_manager: true
+    # https://symfony.com/doc/current/security.html#c-hashing-passwords
+   
+    providers:
+        backend_users:
+            memory:
+                users:
+                    admin: {password: '$argon2id$v=19$m=65536,t=4,p=1$aaSDWpgOfKyOfr3eJo67Pg$CNogvepewtNBcXrEh/ihVfPxY5fwvvZu81urg7zDtEA', roles: ['ROLE_ADMIN']}  
+                    # admin111
+                    user: {password: '$argon2id$v=19$m=65536,t=4,p=1$6pmrAAA7P1pGuN2r3l6hKA$JYDo2EevhVJbu4itomRtE9GxDvnibXiNqyHnO7O1eI0', roles: ['ROLE_USER']} 
+                    # user123
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            pattern: ^/api
+            http_basic:
+                realm: Not today, babe
+
+        users:
+            pattern: ^/api/v1/test/users
+            http_basic:
+                realm: Nonono
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/api/v1/test/users, roles: ROLE_ADMIN }
+        - { path: ^/api/v1/test, roles: [ROLE_USER, ROLE_ADMIN] }
